@@ -4,12 +4,13 @@
 
 ### Contexto
 
-A finales de los 80, en la comunidad científica, existía una fuerte necesidad por software especializado en el manejo de data espacial (Haining, 1989). Este tipo de data posee una alta complejidad en el mundo real y requiere de variadas estructuras para poder ser representada a nivel computacional. Por lo tanto, crear software para análisis de data espacial no era una tarea fácil. Actualmente, la modernización de hardware y software provee numerosas herramientas que cumplen con ese propósito, las cuáles benefician activamente a múltiples industrias.
+A finales de los 80, en la comunidad científica, existía una fuerte necesidad por software especializado en el manejo de data espacial (Haining, 1989). Este tipo de data posee una alta complejidad en el mundo real y requiere de la implementación de variadas estructuras para poder ser representada a nivel computacional. Por lo tanto, crear software para análisis de data espacial no era una tarea fácil. Actualmente, la modernización de hardware y software provee numerosas herramientas que cumplen con ese propósito, las cuáles benefician activamente a múltiples industrias.
 
 ### Conceptos teóricos
 
 - **Base de datos**: Contenedor que permite almacenar la información de forma ordenada con diferentes propósitos y usos (Anguiano, 2014).
 - **Base de datos espacial**: Base de datos que permite describir objectos espaciales a tráves de tres características principales: atributos, localización y topología (Gutiérrez, 2006). Existen dos tipos: georreferenciadas y no georreferenciadas.
+- **Sistema de información geográfica**: Mejor conocido como GIS (siglas en inglés), se refiere al conjunto de herramientas que permiten la manipulación y análisis de grandes colecciones de información geográficamente referenciadas.
 - **PostGIS**: Extensión para manejo de consultas espaciales de Postgresql (RDBMS).
 
 ### Problema
@@ -70,41 +71,58 @@ Se utilizará PostGIS para hacer la validación de resultados.
 
 ## Levantamiento de antecedentes
 
-### Trabajo 1
+### QUILT: a geographic information system based on quadtrees
 
-### Trabajo 2
+Esta investigación describe una nueva herramienta para el manejo de data espacial usando Quadtrees. QUILT es un GIS que usa variantes de Quadtree para representar regiones, líneas y puntos. Esto se logra implementando un Quadtree lineal, organizado en disco usando un B-tree (Shaffer, 1990).
 
-### Trabajo 3
+### Quadtree and R-tree indexes in oracle spatial: a comparison using GIS data
+
+Esta investigación revisa y resume las variantes de Quadtree y R-tree que se han presentado a lo largo de la literatura científica. Asimismo, se compara el rendimiento de las variantes usando grandes datasets en _Oracle Spatial_ y se concluyen en ventajas y desventajas de cada estructura. En sus resultados, los R-trees fueron superiores a los Quadtrees en casi todas las consultas. Sin embargo, en el caso de datasets actualizados en tiempo real, los Quadtrees obtuvieron un mejor rendimiento (Kothuri, 2002).
 
 ## Planteamiento de objetivos
 
 ### Objetivo principal
 
+Implementar un programa capaz de realizar las 5 consultas mencionadas.
+
 ### Objetivos secundarios
+
+1. Implementar un parser para leer e interpretar las consultas. Definir tipos de data y tablas.
+2. Implementar funciones básicas de búsqueda por comparación, operaciones booleanas y agrupación. Solo implementar las necesarias: `==`, `OR`, `COUNT`, `GROUP BY`.
+3. Implementar la función `BBOX` para representar polígonos.
+4. Implementar las funciones `IS_INSIDE` y `IS_OVERLAPPED` usando alguna variante de Quadtree.
+5. Implementar la función `MAX_DISTANCE` usando alguna variante de KDtree.
 
 ## Descripcion de acciones y cronograma previsto
 
-| Fecha | Entregable |
-| ----- | ---------- |
-| 21/06 | algo       |
+| Fecha | Entregable            |
+| ----- | --------------------- |
+| 20/06 | Propuesta inicial     |
+| 27/06 | Objetivo secundario 1 |
+| 04/07 | Objetivo secundario 2 |
+| 11/07 | Objetivo secundario 3 |
+| 18/06 | Objetivo secundario 4 |
+| 25/06 | Objetivo secundario 5 |
 
 ## Identificacion de limitaciones y riesgos
 
 ### Limitaciones
 
-#### Limitacion 1
+#### Hardware
 
-#### Limitacion 2
+La limitación de hardware podría limitar la fase de testing del proyecto debido a que solo se podría utilizar una colección limitada de data. Para mejorar esto, se podrían utilizar muestras significativas de data (propensas a errores).
 
 ### Riesgos
 
-#### Riesgo 1
+#### Quadtree
 
-#### Riesgo 2
+Tal como se menciono en los estudios, el R-tree sobrepasa en rendimiento al Quadtree en la mayoría de casos prácticos. Esto podría resultar en un proyecto ineficiente. Se testeará la implementación del proyecto con la de PostGIS para probar su rendimiento.
 
 ## Uso de referencias bibliograficas
 
+- Anguiano, J. (2014). Características y tipos de bases de datos. IBM website: https://developer.ibm.com/es/technologies/databases/articles/tipos-bases-de-datos.
 - Enunciado del Proyecto de EDA (2021).
 - Gutiérrez, M. (2006). El rol de las bases de datos espaciales en una infraestructura de datos. In GSDI-9 Conference Proceedings (pp. 6-10).
 - Haining, R. (1989). Geography and spatial statistics: current positions, future developments In Macmillan B (ed) Remodelling Geography. Basil Blackwell, Oxford (pp. 191–203).
-- Anguiano, J. (2014). Características y tipos de bases de datos. IBM website: https://developer.ibm.com/es/technologies/databases/articles/tipos-bases-de-datos.
+- Kothuri, R. K. V., Ravada, S., & Abugov, D. (2002, June). Quadtree and R-tree indexes in oracle spatial: a comparison using GIS data. In Proceedings of the 2002 ACM SIGMOD international conference on Management of data (pp. 546-557).
+- Shaffer, C. A., Samet, H., & Nelson, R. C. (1990). QUILT: a geographic information system based on quadtrees. International Journal of Geographical Information System, 4(2), 103-131.
