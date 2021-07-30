@@ -1,5 +1,7 @@
 # Proyecto 2021-I
 
+_Autor: María Lovatón_
+
 ## Descripción teórica del problema
 
 ### Contexto
@@ -17,7 +19,7 @@ A finales de los 80, en la comunidad científica, existía una fuerte necesidad 
 
 #### Enunciado inicial del proyecto
 
-Se requiere implementar un programa que soporte la ejecución de consultas espaciales sobre un conjunto de datos. En este proyecto, se trabajara con registros de viajes de taxi y datos de la demarcacion de barrios de la ciudad de Nueva York.
+Se requiere implementar un programa que soporte la ejecución de consultas espaciales sobre un conjunto de datos. En este proyecto, se trabajara con registros de viajes de taxi y datos de la demarcación de barrios de la ciudad de Nueva York.
 
 #### Consultas
 
