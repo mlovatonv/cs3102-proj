@@ -28,10 +28,8 @@ commands in the `build` directory.
 ### Application
 
 ```bash
-$ ./cs3102-proj
+$ ./cs3102-proj < ../data/green_tripdata_2015-01.csv
 ```
-
-And go to [http://0.0.0.0:8080/](http://0.0.0.0:8080/).
 
 ### Unit tests
 
