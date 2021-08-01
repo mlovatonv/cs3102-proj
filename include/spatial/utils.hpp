@@ -55,9 +55,9 @@ struct Rectangle {
         return out;
     }
 
-    bool maybe_contains(const XY& o) const { return true; }
-
     bool contains(const XY& o) const { return this->bl <= o && o <= this->tr; }
+
+    bool intersects(const Rectangle& o) const { return o.bl <= this->bl || this->tr <= o.tr; }
 
     std::vector<Rectangle> divide() const {
         XY c = XY(mid(bl.x, tr.x), mid(bl.y, tr.y));

@@ -51,6 +51,28 @@ class PRQuadTree {
 
     std::shared_ptr<Node> search(const XY& point) { return this->_search(this->root, point); }
 
+    std::vector<XY> search(const Rectangle& rect) {
+        std::vector<XY> result;
+
+        std::function<void(std::shared_ptr<Node>)> dfs = [&](const std::shared_ptr<Node>& node) {
+            for (auto& p : node->points) {
+                if (rect.contains(p)) {
+                    result.push_back(p);
+                }
+            }
+
+            for (auto& c : node->children) {
+                if (rect.intersects(c->bbox)) {
+                    dfs(c);
+                }
+            }
+        };
+
+        dfs(this->root);
+
+        return result;
+    }
+
     void insert(const XY& point) {
         std::shared_ptr<Node> cur = this->root;
 

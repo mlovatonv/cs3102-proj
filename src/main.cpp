@@ -18,5 +18,8 @@ int main(void) {
         t1.insert(spatial::XY(pu_lng, pu_lat));
     }
 
+    auto result = t1.search(spatial::Rectangle(spatial::XY(-76, 39), spatial::XY(-74, 41)));
+    dbg(result);
+
     return EXIT_SUCCESS;
 }
