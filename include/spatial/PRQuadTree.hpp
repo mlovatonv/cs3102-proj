@@ -19,11 +19,7 @@ class PRQuadTree {
         Node(const Rectangle& bbox, const std::vector<XY>& points)
             : bbox(bbox), children(0), points(points) {}
 
-        COLOR color() const {
-            if (this->points.size() == 0) return WHITE;
-            if (this->points.size() == NODE_CAPACITY) return BLACK;
-            return GREY;
-        };
+        bool is_full() const { return this->points.size() == NODE_CAPACITY; };
 
         bool is_leaf() const { return this->children.empty(); }
 
@@ -80,7 +76,7 @@ class PRQuadTree {
 
         std::function<void(std::shared_ptr<Node>)> dfs = [&](const std::shared_ptr<Node>& node) {
             if (node->is_leaf()) {
-                if (node->color() == BLACK) {
+                if (node->is_full()) {
                     node->divide();
                 } else {
                     node->points.push_back(point);

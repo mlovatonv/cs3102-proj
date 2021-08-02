@@ -78,9 +78,14 @@ struct Circle {
 
     Circle(const XY& c, const double& d) : bl(c.x - d, c.y - d), tr(c.x + d, c.y + d), c(c), d(d) {}
 
+    friend std::ostream& operator<<(std::ostream& out, const Circle& o) {
+        out << "( " << o.bl << ", " << o.tr << ", " << o.c << ", " << o.d << " )";
+        return out;
+    }
+
     bool contains(const XY& o) const { return this->bl <= o && o <= this->tr && eudist(c, o) <= d; }
 
-    bool intersects(const Rectangle& o) const { return o.bl <= this->bl || this->tr <= o.tr; }
+    bool intersects(const Rectangle& o) const { return o.bl <= this->tr || this->bl <= o.tr; }
 };
 
 }  // namespace spatial
