@@ -26,30 +26,30 @@ class PRQuadTree {
         };
 
         bool is_leaf() const { return this->children.empty(); }
+
+        void divide() {
+            std::vector<Rectangle> rectangles = this->bbox.divide();
+
+            for (auto& r : rectangles) {
+                std::shared_ptr<Node> new_child = std::make_shared<Node>(r);
+                this->children.push_back(new_child);
+
+                for (auto& p : this->points) {
+                    if (r.contains(p)) {
+                        new_child->points.push_back(p);
+                    }
+                }
+            }
+
+            this->points.clear();
+        }
     };
 
    private:
     std::shared_ptr<Node> root;
 
-    std::shared_ptr<Node> _search(const std::shared_ptr<Node>& node, const XY& point) {
-        if (node->is_leaf()) {
-            return node;
-        } else {
-            std::function<bool(std::shared_ptr<Node>)> contains_point =
-                [&](const std::shared_ptr<Node>& x) { return x->bbox.contains(point); };
-
-            auto it = std::find_if(node->children.begin(), node->children.end(), contains_point);
-
-            assert(it != node->children.end());
-
-            return this->_search(*it, point);
-        }
-    }
-
    public:
     PRQuadTree(const Rectangle& bbox) { this->root = std::make_shared<Node>(bbox); }
-
-    std::shared_ptr<Node> search(const XY& point) { return this->_search(this->root, point); }
 
     template <typename Shape>
     std::vector<XY> search(const Shape& shape) {
@@ -75,35 +75,26 @@ class PRQuadTree {
     }
 
     void insert(const XY& point) {
-        std::shared_ptr<Node> cur = this->root;
+        std::function<bool(std::shared_ptr<Node>)> contains_point =
+            [&](const std::shared_ptr<Node>& x) { return x->bbox.contains(point); };
 
-        while (true) {
-            std::shared_ptr<Node> node = this->_search(cur, point);
-
-            if (node->color() == BLACK) {
-                std::vector<Rectangle> rectangles = node->bbox.divide();
-
-                std::function<void(Rectangle)> divide_points = [&](const Rectangle& x) {
-                    std::shared_ptr<Node> new_node = std::make_shared<Node>(x);
-                    node->children.push_back(new_node);
-                    std::function<void(XY)> inside_node = [&](const XY& x) {
-                        if (new_node->bbox.contains(x)) {
-                            new_node->points.push_back(x);
-                        }
-                    };
-                    std::for_each(node->points.begin(), node->points.end(), inside_node);
-                };
-
-                std::for_each(rectangles.begin(), rectangles.end(), divide_points);
-
-                node->points.clear();
-
-                cur = node;
-            } else {
-                node->points.push_back(point);
-                break;
+        std::function<void(std::shared_ptr<Node>)> dfs = [&](const std::shared_ptr<Node>& node) {
+            if (node->is_leaf()) {
+                if (node->color() == BLACK) {
+                    node->divide();
+                } else {
+                    node->points.push_back(point);
+                    return;
+                }
             }
-        }
+            auto it = std::find_if(node->children.begin(), node->children.end(), contains_point);
+
+            assert(it != node->children.end());
+
+            dfs(*it);
+        };
+
+        dfs(this->root);
     }
 };
 
