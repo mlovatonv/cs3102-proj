@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <functional>
 #include <limits>
 #include <memory>
@@ -44,6 +45,8 @@ struct XY {
     }
 };
 
+double eudist(const XY& a, const XY& b) { return std::hypot(a.x - b.x, a.y - b.y); }
+
 struct Rectangle {
     XY bl;  // bottom left
     XY tr;  // top right
@@ -68,8 +71,16 @@ struct Rectangle {
 };
 
 struct Circle {
-    XY c;  // center
-    double distance;
+    XY bl;     // bottom left
+    XY tr;     // top right
+    XY c;      // center
+    double d;  // distance
+
+    Circle(const XY& c, const double& d) : bl(c.x - d, c.y - d), tr(c.x + d, c.y + d), c(c), d(d) {}
+
+    bool contains(const XY& o) const { return this->bl <= o && o <= this->tr && eudist(c, o) <= d; }
+
+    bool intersects(const Rectangle& o) const { return o.bl <= this->bl || this->tr <= o.tr; }
 };
 
 }  // namespace spatial
