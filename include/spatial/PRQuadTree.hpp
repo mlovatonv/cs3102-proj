@@ -24,14 +24,14 @@ class PRQuadTree {
         bool is_leaf() const { return this->children.empty(); }
 
         void divide() {
-            std::vector<Rectangle> rectangles = this->bbox.divide();
+            std::vector<Rectangle> quadrants = this->bbox.divide();
 
-            for (auto& r : rectangles) {
-                std::shared_ptr<Node> new_child = std::make_shared<Node>(r);
+            for (auto& q : quadrants) {
+                std::shared_ptr<Node> new_child = std::make_shared<Node>(q);
                 this->children.push_back(new_child);
 
                 for (auto& p : this->points) {
-                    if (r.contains(p)) {
+                    if (q.contains(p)) {
                         new_child->points.push_back(p);
                     }
                 }
