@@ -60,7 +60,10 @@ struct Rectangle {
 
     bool contains(const XY& o) const { return this->bl <= o && o <= this->tr; }
 
-    bool intersects(const Rectangle& o) const { return o.bl <= this->bl || this->tr <= o.tr; }
+    bool intersects(const Rectangle& o) const {
+        return this->bl.x <= o.tr.x && o.bl.x <= this->tr.x && this->bl.y <= o.tr.y &&
+               o.bl.y <= this->tr.y;
+    }
 
     std::vector<Rectangle> divide() const {
         XY c = XY(mid(bl.x, tr.x), mid(bl.y, tr.y));
@@ -85,7 +88,10 @@ struct Circle {
 
     bool contains(const XY& o) const { return this->bl <= o && o <= this->tr && eudist(c, o) <= d; }
 
-    bool intersects(const Rectangle& o) const { return o.bl <= this->tr || this->bl <= o.tr; }
+    bool intersects(const Rectangle& o) const {
+        return this->bl.x <= o.tr.x && o.bl.x <= this->tr.x && this->bl.y <= o.tr.y &&
+               o.bl.y <= this->tr.y;
+    }
 };
 
 }  // namespace spatial
