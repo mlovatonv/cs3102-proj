@@ -136,6 +136,8 @@ class PMQuadTree {
             }
         };
 
+        dfs(this->root);
+
         return result;
     }
 
