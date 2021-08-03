@@ -16,10 +16,7 @@ class PRQuadTree {
 
         Node(const Rectangle& bbox) : bbox(bbox), children(0), points(0) {}
 
-        Node(const Rectangle& bbox, const std::vector<XY>& points)
-            : bbox(bbox), children(0), points(points) {}
-
-        bool is_full() const { return this->points.size() == NODE_CAPACITY; };
+        bool is_full() const { return this->points.size() == NODE_CAPACITY; }
 
         bool is_leaf() const { return this->children.empty(); }
 
@@ -45,7 +42,14 @@ class PRQuadTree {
     std::shared_ptr<Node> root;
 
    public:
-    PRQuadTree(const Rectangle& bbox) { this->root = std::make_shared<Node>(bbox); }
+    PRQuadTree(const Rectangle& bbox) : root(std::make_shared<Node>(bbox)) {}
+
+    PRQuadTree(const Rectangle& bbox, const std::vector<XY>& points)
+        : root(std::make_shared<Node>(bbox)) {
+        for (auto& p : points) {
+            this->insert(p);
+        }
+    }
 
     template <typename Shape>
     std::vector<XY> search(const Shape& shape) {
@@ -71,9 +75,6 @@ class PRQuadTree {
     }
 
     void insert(const XY& point) {
-        std::function<bool(std::shared_ptr<Node>)> contains_point =
-            [&](const std::shared_ptr<Node>& x) { return x->bbox.contains(point); };
-
         std::function<void(std::shared_ptr<Node>)> dfs = [&](const std::shared_ptr<Node>& node) {
             if (node->is_leaf()) {
                 if (node->is_full()) {
@@ -83,11 +84,13 @@ class PRQuadTree {
                     return;
                 }
             }
-            auto it = std::find_if(node->children.begin(), node->children.end(), contains_point);
 
-            assert(it != node->children.end());
-
-            dfs(*it);
+            for (auto& c : node->children) {
+                if (c->bbox.contains(point)) {
+                    dfs(c);
+                    return;
+                }
+            }
         };
 
         dfs(this->root);
