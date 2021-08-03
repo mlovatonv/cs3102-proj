@@ -5,7 +5,7 @@
 
 namespace spatial {
 
-// https://stackoverflow.com/questions/67325769/how-to-determine-the-optimal-capacity-for-quadtree-subdivision
+// https://stackoverflow.com/a/67346872
 template <int NODE_CAPACITY = 1000>
 class PRQuadTree {
    public:
