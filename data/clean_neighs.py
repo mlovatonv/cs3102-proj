@@ -15,10 +15,9 @@ def main():
         for pid, feature in enumerate(data["features"]):
             coords = feature["geometry"]["coordinates"][0]
             n_coords = len(coords)
-            p = mid_point(coords[0], coords[3])  # point inside polygon
-            for j in range(0, n_coords - 2):
+            p = mid_point(coords[0], coords[2])  # point inside polygon
+            for j in range(0, n_coords - 1):
                 print(polygon_line(pid, p, coords[j], coords[j + 1]))
-            print(polygon_line(pid, p, coords[n_coords - 1], coords[0]))
 
 
 if __name__ == "__main__":
