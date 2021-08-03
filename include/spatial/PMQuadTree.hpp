@@ -123,11 +123,12 @@ class PMQuadTree {
                             // check brothers
                             for (auto const& b : node->children) {
                                 result = b->locate(point);
-                                if (result != NO_RESULT) break;
+                                if (result != NO_RESULT) return;
                             }
                         } else {
                             result = c->locate(point);
                         }
+                        if (result != NO_RESULT) return;
                     } else {
                         dfs(c);
                         break;

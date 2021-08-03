@@ -15,7 +15,7 @@
 namespace spatial {
 
 const double INF = std::numeric_limits<double>::max();
-const double U = std::numeric_limits<double>::min();
+const double U = 1e-16;
 const int NO_RESULT = -1;
 
 enum COLOR {
@@ -53,9 +53,13 @@ double ccw(const XY& a, const XY& b, const XY& c);
 struct Line {
     XY p1;
     XY p2;
-    double m;
 
     Line(const XY& p1, const XY& p2) : p1(p1), p2(p2) {}
+
+    friend std::ostream& operator<<(std::ostream& out, const Line& o) {
+        out << "( " << o.p1 << ", " << o.p2 << " )";
+        return out;
+    }
 
     bool intersects(const Line& o) const {
         // no collinear points
@@ -71,13 +75,17 @@ struct PolygonLine {
 
     PolygonLine(const XY& p1, const XY& p2, const XY& c, int id) : l(p1, p2), c(c), id(id) {}
 
+    friend std::ostream& operator<<(std::ostream& out, const PolygonLine& o) {
+        out << "( " << o.id << ", " << o.l << ", " << o.c << " )";
+        return out;
+    }
+
     bool contains(const XY& o) const {
         // let's assume that the point cannot be over the line
         // returns if c and o are in the same side of the line
-        // https://stackoverflow.com/a/28555585
-        return ((l.p1.y - l.p2.y) * (c.x - l.p1.x) +
-                (l.p2.x - l.p1.x) * (c.y - l.p1.y) * (l.p1.y - l.p2.y) * (o.x - l.p1.x) +
-                (l.p2.x - l.p1.x) * (o.y - l.p1.y)) > 0;
+        // https://math.stackexchange.com/a/162733
+        return (((l.p1.y - l.p2.y) * (c.x - l.p1.x) + (l.p2.x - l.p1.x) * (c.y - l.p1.y)) *
+                ((l.p1.y - l.p2.y) * (o.x - l.p1.x) + (l.p2.x - l.p1.x) * (o.y - l.p1.y))) >= 0;
     }
 };
 
@@ -100,12 +108,19 @@ struct Rectangle {
     }
 
     bool intersects(const Line& o) const {
-        XY br(tr.x, bl.y), tl(bl.x, tl.y);
-        for (auto const& l : {Line(bl, br), Line(br, tr), Line(tr, tl), Line(tl, bl)}) {
+        XY br(this->tr.x, this->bl.y), tl(this->bl.x, this->tr.y);
+
+        if (this->contains(o.p1) || this->contains(o.p2)) {
+            return true;
+        }
+
+        for (auto const& l :
+             {Line(this->bl, br), Line(br, this->tr), Line(this->tr, tl), Line(tl, this->bl)}) {
             if (l.intersects(o)) {
                 return true;
             }
         }
+
         return false;
     }
 
