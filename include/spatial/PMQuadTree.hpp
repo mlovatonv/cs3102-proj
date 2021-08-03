@@ -79,35 +79,44 @@ class PMQuadTree {
     }
 
     void insert(const PolygonLine& pline) {
-        std::function<void(std::shared_ptr<Node>)> dfs = [&](const std::shared_ptr<Node>& node) {
+        std::function<void(std::shared_ptr<Node>)> dfs1 = [&](const std::shared_ptr<Node>& node) {
             if (node->is_leaf()) {
-                node->plines.push_back(pline);
-
-                for (auto const& p : {pline.l.p1, pline.l.p2}) {
-                    if (node->bbox.contains(p)) {
-                        if (node->is_full()) {
-                            if (node->points[0] == p) {
-                                continue;  // join
-                            } else if (node->is_leaf()) {
-                                node->divide();
-                            }
-                        } else {
-                            node->points.push_back(p);
+                if (node->bbox.contains(pline.l.p1)) {
+                    if (node->is_full()) {
+                        if (node->points[0] == pline.l.p1) {
                             return;
+                        } else {
+                            node->divide();
                         }
+                    } else {
+                        node->points.push_back(pline.l.p1);
+                        return;
                     }
                 }
             }
 
             for (auto const& c : node->children) {
-                if (c->bbox.intersects(pline)) {
-                    dfs(c);
+                if (c->bbox.contains(pline.l.p1)) {
+                    dfs1(c);
                     return;
                 }
             }
         };
 
-        dfs(this->root);
+        std::function<void(std::shared_ptr<Node>)> dfs2 = [&](const std::shared_ptr<Node>& node) {
+            if (node->is_leaf()) {
+                node->plines.push_back(pline);
+            }
+
+            for (auto const& c : node->children) {
+                if (c->bbox.intersects(pline)) {
+                    dfs2(c);
+                }
+            }
+        };
+
+        dfs1(this->root);
+        dfs2(this->root);
     }
 
     int locate(const XY& point) {
