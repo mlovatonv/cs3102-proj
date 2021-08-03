@@ -48,15 +48,19 @@ struct XY {
 
 double eudist(const XY& a, const XY& b);
 
+double ccw(const XY& a, const XY& b, const XY& c);
+
 struct Line {
     XY p1;
     XY p2;
+    double m;
 
     Line(const XY& p1, const XY& p2) : p1(p1), p2(p2) {}
 
-    bool joins(const Line& o) const {
-        // TO-DO
-        return false;
+    bool intersects(const Line& o) const {
+        // no collinear points
+        return (ccw(this->p1, o.p1, o.p2) != ccw(this->p2, o.p1, o.p2) &&
+                ccw(this->p1, this->p2, o.p1) != ccw(this->p1, this->p2, o.p2));
     }
 };
 
@@ -65,12 +69,16 @@ struct PolygonLine {
     XY c;    // point inside polygon
     int id;  // polygon id
 
-    bool contains(const XY& o) const {
-        // TO-DO
-        return false;
-    }
+    PolygonLine(const XY& p1, const XY& p2, const XY& c, int id) : l(p1, p2), c(c), id(id) {}
 
-    bool joins(const PolygonLine& o) const { return this->l.joins(o.l); }
+    bool contains(const XY& o) const {
+        // let's assume that the point cannot be over the line
+        // returns if c and o are in the same side of the line
+        // https://stackoverflow.com/a/28555585
+        return ((l.p1.y - l.p2.y) * (c.x - l.p1.x) +
+                (l.p2.x - l.p1.x) * (c.y - l.p1.y) * (l.p1.y - l.p2.y) * (o.x - l.p1.x) +
+                (l.p2.x - l.p1.x) * (o.y - l.p1.y)) > 0;
+    }
 };
 
 struct Rectangle {
@@ -92,7 +100,12 @@ struct Rectangle {
     }
 
     bool intersects(const Line& o) const {
-        // TO-DO
+        XY br(tr.x, bl.y), tl(bl.x, tl.y);
+        for (auto& l : {Line(bl, br), Line(br, tr), Line(tr, tl), Line(tl, bl)}) {
+            if (l.intersects(o)) {
+                return true;
+            }
+        }
         return false;
     }
 
