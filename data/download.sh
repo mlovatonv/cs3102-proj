@@ -21,3 +21,6 @@ sed -i '/0 /d' $POINTS_FILENAME
 
 # clean polygon lines
 python clean_neighs.py > $POLYGON_LINES_FILENAME
+
+# cat
+cat points.txt polygon_lines.txt > data.txt

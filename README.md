@@ -35,7 +35,7 @@ commands in the `build` directory.
 ### Application
 
 ```bash
-$ ./cs3102-proj < ../data/points.txt < ../data/polygon_lines.txt
+$ ./cs3102-proj < ../data/data.txt
 ```
 
 ### Unit tests

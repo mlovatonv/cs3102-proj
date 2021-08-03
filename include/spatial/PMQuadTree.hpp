@@ -87,11 +87,10 @@ class PMQuadTree {
                     if (node->bbox.contains(p)) {
                         if (node->is_full()) {
                             if (node->points[0] == p) {
-                                return;  // join
-                            } else {
+                                continue;  // join
+                            } else if (node->is_leaf()) {
                                 node->divide();
                             }
-
                         } else {
                             node->points.push_back(p);
                             return;
