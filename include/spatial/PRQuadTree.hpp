@@ -23,11 +23,11 @@ class PRQuadTree {
         void divide() {
             std::vector<Rectangle> quadrants = this->bbox.divide();
 
-            for (auto& q : quadrants) {
+            for (auto const& q : quadrants) {
                 std::shared_ptr<Node> new_child = std::make_shared<Node>(q);
                 this->children.push_back(new_child);
 
-                for (auto& p : this->points) {
+                for (auto const& p : this->points) {
                     if (q.contains(p)) {
                         new_child->points.push_back(p);
                     }
@@ -46,7 +46,7 @@ class PRQuadTree {
 
     PRQuadTree(const Rectangle& bbox, const std::vector<XY>& points)
         : root(std::make_shared<Node>(bbox)) {
-        for (auto& p : points) {
+        for (auto const& p : points) {
             this->insert(p);
         }
     }
@@ -56,13 +56,13 @@ class PRQuadTree {
         std::vector<XY> result;
 
         std::function<void(std::shared_ptr<Node>)> dfs = [&](const std::shared_ptr<Node>& node) {
-            for (auto& p : node->points) {
+            for (auto const& p : node->points) {
                 if (shape.contains(p)) {
                     result.push_back(p);
                 }
             }
 
-            for (auto& c : node->children) {
+            for (auto const& c : node->children) {
                 if (shape.intersects(c->bbox)) {
                     dfs(c);
                 }
@@ -85,7 +85,7 @@ class PRQuadTree {
                 }
             }
 
-            for (auto& c : node->children) {
+            for (auto const& c : node->children) {
                 if (c->bbox.contains(point)) {
                     dfs(c);
                     return;

@@ -101,7 +101,7 @@ struct Rectangle {
 
     bool intersects(const Line& o) const {
         XY br(tr.x, bl.y), tl(bl.x, tl.y);
-        for (auto& l : {Line(bl, br), Line(br, tr), Line(tr, tl), Line(tl, bl)}) {
+        for (auto const& l : {Line(bl, br), Line(br, tr), Line(tr, tl), Line(tl, bl)}) {
             if (l.intersects(o)) {
                 return true;
             }

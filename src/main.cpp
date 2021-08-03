@@ -83,7 +83,7 @@ int main(void) {
 
         // output
         std::cout << result.size() << " points" << std::endl;
-        for (auto& p : result) {
+        for (auto const& p : result) {
             std::cout << p << std::endl;
         }
     };
@@ -106,10 +106,12 @@ int main(void) {
 
         // output
         std::cout << result.size() << " points" << std::endl;
-        for (auto& p : result) {
+        for (auto const& p : result) {
             std::cout << p << std::endl;
         }
     };
+
+    query2();
 
     return EXIT_SUCCESS;
 }

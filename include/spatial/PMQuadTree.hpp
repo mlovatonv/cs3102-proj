@@ -30,7 +30,7 @@ class PMQuadTree {
             int result = NO_RESULT;
 
             // TO-DO: See if this works
-            for (auto& pl : this->plines) {
+            for (auto const& pl : this->plines) {
                 if (pl.contains(point)) {
                     result = pl.id;
                     break;
@@ -43,17 +43,17 @@ class PMQuadTree {
         void divide() {
             std::vector<Rectangle> quadrants = this->bbox.divide();
 
-            for (auto& q : quadrants) {
+            for (auto const& q : quadrants) {
                 std::shared_ptr<Node> new_child = std::make_shared<Node>(q);
                 this->children.push_back(new_child);
 
-                for (auto& p : this->points) {
+                for (auto const& p : this->points) {
                     if (q.contains(p)) {
                         new_child->points.push_back(p);
                     }
                 }
 
-                for (auto& pl : this->plines) {
+                for (auto const& pl : this->plines) {
                     if (q.intersects(pl)) {
                         new_child->plines.push_back(pl);
                     }
@@ -73,7 +73,7 @@ class PMQuadTree {
 
     PMQuadTree(const Rectangle& bbox, const std::vector<PolygonLine>& plines)
         : root(std::make_shared<Node>(bbox)) {
-        for (auto& pl : plines) {
+        for (auto const& pl : plines) {
             this->insert(pl);
         }
     }
@@ -83,7 +83,7 @@ class PMQuadTree {
             if (node->is_leaf()) {
                 node->plines.push_back(pline);
 
-                for (auto& p : {pline.l.p1, pline.l.p2}) {
+                for (auto const& p : {pline.l.p1, pline.l.p2}) {
                     if (node->bbox.contains(p)) {
                         if (node->is_full()) {
                             if (node->points[0] == p) {
@@ -100,7 +100,7 @@ class PMQuadTree {
                 }
             }
 
-            for (auto& c : node->children) {
+            for (auto const& c : node->children) {
                 if (c->bbox.intersects(pline)) {
                     dfs(c);
                     return;
@@ -115,13 +115,13 @@ class PMQuadTree {
         int result = NO_RESULT;
 
         std::function<void(std::shared_ptr<Node>)> dfs = [&](const std::shared_ptr<Node>& node) {
-            for (auto& c : node->children) {
+            for (auto const& c : node->children) {
                 if (c->bbox.contains(point)) {
                     // TO-DO: Refactor
                     if (c->is_leaf()) {
                         if (c->is_empty()) {
                             // check brothers
-                            for (auto& b : node->children) {
+                            for (auto const& b : node->children) {
                                 result = b->locate(point);
                                 if (result != NO_RESULT) break;
                             }
@@ -145,7 +145,7 @@ class PMQuadTree {
         std::vector<int> result;
         result.reserve(points.size());
 
-        for (auto& p : points) {
+        for (auto const& p : points) {
             result.push_back(this->locate(p));
         }
 
