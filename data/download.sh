@@ -11,3 +11,4 @@ rm $TMP_FILENAME
 sed -i '1d' $TAXI_DATA_FILENAME
 sed -i 's/,/ /g' $TAXI_DATA_FILENAME
 sed -i '/0 /d' $TAXI_DATA_FILENAME
+python clean_neighs.py > clean_neighs.txt
