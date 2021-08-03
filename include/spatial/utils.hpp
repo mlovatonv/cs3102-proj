@@ -16,6 +16,7 @@ namespace spatial {
 
 const double INF = std::numeric_limits<double>::max();
 const double U = std::numeric_limits<double>::min();
+const int NO_RESULT = -1;
 
 enum COLOR {
     BLACK,
@@ -23,7 +24,7 @@ enum COLOR {
     WHITE,
 };
 
-double mid(const double& a, const double& b) { return (a + b) / 2.0; }
+double mid(const double& a, const double& b);
 
 struct XY {
     double x;
@@ -45,7 +46,32 @@ struct XY {
     }
 };
 
-double eudist(const XY& a, const XY& b) { return std::hypot(a.x - b.x, a.y - b.y); }
+double eudist(const XY& a, const XY& b);
+
+struct Line {
+    XY p1;
+    XY p2;
+
+    Line(const XY& p1, const XY& p2) : p1(p1), p2(p2) {}
+
+    bool joins(const Line& o) const {
+        // TO-DO
+        return false;
+    }
+};
+
+struct PolygonLine {
+    Line l;  // line
+    XY c;    // point inside polygon
+    int id;  // polygon id
+
+    bool contains(const XY& o) const {
+        // TO-DO
+        return false;
+    }
+
+    bool joins(const PolygonLine& o) const { return this->l.joins(o.l); }
+};
 
 struct Rectangle {
     XY bl;  // bottom left
@@ -64,6 +90,13 @@ struct Rectangle {
         return this->bl.x <= o.tr.x && o.bl.x <= this->tr.x && this->bl.y <= o.tr.y &&
                o.bl.y <= this->tr.y;
     }
+
+    bool intersects(const Line& o) const {
+        // TO-DO
+        return false;
+    }
+
+    bool intersects(const PolygonLine& pline) const { return this->intersects(pline.l); }
 
     std::vector<Rectangle> divide() const {
         XY c = XY(mid(bl.x, tr.x), mid(bl.y, tr.y));
