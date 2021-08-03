@@ -12,6 +12,13 @@ Install required packages.
 $ sudo apt install gcc g++ clang clang-format cmake
 ```
 
+## Data
+
+```bash
+$ cd data
+$ sh download.sh
+```
+
 ## Build
 
 ```bash
@@ -28,7 +35,7 @@ commands in the `build` directory.
 ### Application
 
 ```bash
-$ ./cs3102-proj < ../data/green_tripdata_2015-01.csv
+$ ./cs3102-proj < ../data/points.txt < ../data/polygon_lines.txt
 ```
 
 ### Unit tests
