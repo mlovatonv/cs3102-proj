@@ -107,9 +107,27 @@ Se crearon unit tests ([PM quadtree](https://github.com/mlovatonv/cs3102-proj/bl
 
 ### Tiempo de ejecución
 
+Se corrieron benchmarks para medir la eficiencia de las estructuras. En estos, se mide la construcción de la estructura junto con la consulta.
+
+![](images/benchmark1.png)
+
+![](images/benchmark4.png)
+
+El tiempo de construcción en ambas estructuras es directamente proporcional con el número de objetos.
+
+![](images/benchmark2.png)
+
+![](images/benchmark3.png)
+
+El tiempo de búsqueda por región también parece crecer con el número de objetos pero en una magnitud menor.
+
+![](images/benchmark5.png)
+
+El tiempo para realizar un spatial join (o localizar un punto) se mantiene constante.
+
 ## Conclusiones
 
-El quadtree es una estructura de datos que puede ser utilizada para responder de manera eficiente consultas como la realización de un spatial join o la búsqueda de registros dentro de un espacio. Sin embargo, pueden haber casos donde su uso sea contraproducente y el uso de otras estructuras, como el R-tree, pueda ser mejor. Se deben tomar en cuenta factores como la distribución de puntos, el orden de inserción, la dinamicidad de los registros, las características del sistema, entre otros.
+El quadtree es una estructura de datos que puede ser utilizada para responder de manera eficiente consultas como la realización de un spatial join o la búsqueda de registros dentro de un espacio. Sin embargo, pueden haber casos donde su uso sea contraproducente y se podría recomendar el uso de otras estructuras, como el R-tree. Se deben tomar en cuenta factores como la distribución de puntos, el orden de inserción, la dinamicidad de los registros, las características del sistema, entre otros.
 
 ## Referencias bibliográficas
 
